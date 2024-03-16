@@ -14,7 +14,7 @@ gem "puma", "~> 5.0"
 
 gem 'mongoid', '~> 7.0'
 
-gem 'sidekiq'
+gem 'sidekiq', '5.2.9'
 
 gem 'dotenv', '~> 2.1', '>= 2.1.1'
 
