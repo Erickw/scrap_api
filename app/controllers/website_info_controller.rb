@@ -1,10 +1,11 @@
 class WebsiteInfoController < ApplicationController
+  before_action :generate_process_id, only: :create
+  before_action :url_param, only: :create
+  before_action :process_id_param, only: :show
 
   def create
-    process_id = generate_process_id
-
-    FetchWebsiteInfoWorker.perform_async(url, process_id)
-    render json: { message: "Job to fetch enqueued successfully, you can request it by: #{process_id}" } , status: :created
+    FetchWebsiteInfoWorker.perform_async(@url, @process_id)
+    render json: { message: "Job to fetch enqueued successfully, you can request it by: #{@process_id}" } , status: :created
   end
 
   def index
@@ -13,7 +14,7 @@ class WebsiteInfoController < ApplicationController
   end
 
   def show
-    @website_info = website_info_with_proccess_id(process_id_param)
+    @website_info = website_info_with_proccess_id(@process_id_param)
 
     if @website_info.blank?
       render json: {message: "The website info was not processed yet, try again later"}, status: :not_found
@@ -25,24 +26,22 @@ class WebsiteInfoController < ApplicationController
 
   private
 
-  def url
-    params.require(:website_info).permit(:url).dig("url")
+  def url_param
+    @url = params.require(:website_info).permit(:url).dig("url")
   end
 
   def process_id_param
-    params.require(:website_info).permit(:process_id).dig("process_id")
+    @process_id_param = params.require(:website_info).permit(:process_id).dig("process_id")
   end
 
   def generate_process_id
-    procces_id = SecureRandom.random_number(10000000)
-
     loop do
-      break unless website_info_with_proccess_id(procces_id).present?
+      @process_id = SecureRandom.random_number(10000000)
+      break unless website_info_with_proccess_id(@process_id).present?
     end
-    procces_id
   end
 
-  def website_info_with_proccess_id(procces_id)
-    WebsiteInfo.find_by(process_id: procces_id)
+  def website_info_with_proccess_id(process_id)
+    WebsiteInfo.find_by(process_id: process_id)
   end
 end
