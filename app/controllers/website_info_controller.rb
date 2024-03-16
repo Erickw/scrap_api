@@ -21,7 +21,6 @@ class WebsiteInfoController < ApplicationController
     else
       render json: @website_info, status: :ok
     end
-
   end
 
   private
