@@ -14,7 +14,7 @@ class WebsiteInfoController < ApplicationController
   end
 
   def show
-    @website_info = website_info_with_proccess_id(@process_id_param)
+    @website_info = website_info_with_process_id(@process_id_param)
 
     if @website_info.blank?
       render json: {message: "The website info was not processed yet, try again later"}, status: :not_found
@@ -36,11 +36,11 @@ class WebsiteInfoController < ApplicationController
   def generate_process_id
     loop do
       @process_id = SecureRandom.random_number(10000000)
-      break unless website_info_with_proccess_id(@process_id).present?
+      break unless website_info_with_process_id(@process_id).present?
     end
   end
 
-  def website_info_with_proccess_id(process_id)
+  def website_info_with_process_id(process_id)
     WebsiteInfo.find_by(process_id: process_id)
   end
 end
