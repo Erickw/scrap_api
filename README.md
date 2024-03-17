@@ -54,4 +54,4 @@ Make sure you have the following software installed on your local machine:
   ```ruby
   ExampleWorker.perform_async(*args)
   ```
-  The main job from thits project is `FetchWebsiteInfoWorker` called by `WebsiteInfoController``
+  The main job from thits project is `FetchWebsiteInfoWorker` called by `WebsiteInfoController`.
